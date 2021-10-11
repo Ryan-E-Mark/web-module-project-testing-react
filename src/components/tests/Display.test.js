@@ -1,7 +1,72 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+
+import Display from '../Display';
+import { fetchShow } from './../../api/fetchShow';
+jest.mock('./../../api/fetchShow');
+
+const testShow = {
+    name: '',
+    summary: '',
+    seasons: [
+        {
+            episodes: [],
+            id: 12,
+            name: 'One',
+        },
+        {
+            episodes: [],
+            id: 123,
+            name: 'Two',
+        },
+        {
+            episodes: [],
+            id: 31,
+            name: 'Three',
+        }
+    ],
+}
 
 
+test('Test that the Display component renders without any passed in props.', () => {
+    render(<Display />);
+})
 
+test('Test that when the fetch button is pressed, the show component will display.', async () => {
+    //Arrange
+    render(<Display />);
 
+    fetchShow.mockResolvedValueOnce({
+        data: {
+            name: '',
+            image: "",
+            summary: '',
+            seasons: [
+                {
+                    episodes: [],
+                    id: 12,
+                    name: 'One',
+                },
+                {
+                    episodes: [],
+                    id: 123,
+                    name: 'Two',
+                },
+                {
+                    episodes: [],
+                    id: 31,
+                    name: 'Three',
+                }
+            ]
+        }
+    })
+    //Act
+    const button = screen.queryByRole("button");
+    userEvent.click(button);
+    //Assert
+    const shows = await screen.findByTestId(/show-container/i)
+    expect(shows).toBeInTheDocument();
+})
 
 
 
